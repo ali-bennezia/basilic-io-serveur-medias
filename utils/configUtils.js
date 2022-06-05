@@ -1,4 +1,4 @@
-const compulsoryEnvVariables = ["APPLICATION_SERVER_ADRESS", "MEDIA_ROOT"];
+const compulsoryEnvVariables = ["APPLICATION_SERVER_IPv6", "MEDIA_ROOT"];
 
 exports.checkEnvVariables = () => {
   let missing = [];

@@ -7,5 +7,5 @@ exports.isWhitelistEnabled = () => {
 };
 
 exports.getApplicationServerIp = () => {
-  return process.env.APPLICATION_SERVER_IP;
+  return process.env.APPLICATION_SERVER_IPv6;
 };

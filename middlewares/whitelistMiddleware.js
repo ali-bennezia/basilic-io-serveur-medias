@@ -9,6 +9,8 @@ const appUtils = require("../utils/appUtils");
 
 module.exports = async function (req, res, next) {
   try {
+    const ip = req.headers["x-forwarded-for"] || req.ip;
+
     if (
       appUtils.isWhitelistEnabled() &&
       req.ip != appUtils.getApplicationServerIp()
