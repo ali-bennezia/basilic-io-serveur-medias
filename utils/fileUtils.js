@@ -18,7 +18,7 @@ exports.createDirectories = function (...directories) {
         });
     });
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
 };
 
@@ -28,7 +28,7 @@ exports.writeFileFromBuffer = function (path, buffer) {
       if (err) console.log(getCreationErrorString(root + path, err));
     });
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
 };
 
@@ -41,7 +41,15 @@ exports.deleteFile = function (path) {
       if (err) console.log(getRemovalErrorString(root + path, err));
     });
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
+  }
+};
+
+exports.deleteFiles = function (...paths) {
+  try {
+    for (path of paths) this.deleteFile(path);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -55,7 +63,7 @@ exports.readFile = function (path, prePath = "") {
     const data = fs.readFileSync(fullPath);
     return data;
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
   return null;
 };

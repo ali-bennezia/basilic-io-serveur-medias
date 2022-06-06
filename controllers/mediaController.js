@@ -23,6 +23,25 @@ exports.deleteMedia = async function (req, res) {
   }
 };
 
+// DELETE /api/medias/deletemany
+exports.deleteMedias = async function (req, res) {
+  try {
+    if (
+      !"list" in req.body ||
+      req.body.list ||
+      !Array.isArray(req.body.list) ||
+      req.body.list.length == 0
+    )
+      return res.status(400).json("Bad Request");
+
+    fileUtils.deleteFiles(...req.body.list);
+    res.status(200).json("OK");
+  } catch (err) {
+    res.status(500).json("Internal Server Error");
+    console.log(err);
+  }
+};
+
 // GET /api/medias/public/get/:mediaFileName
 exports.getPublicMedia = async function (req, res) {
   try {

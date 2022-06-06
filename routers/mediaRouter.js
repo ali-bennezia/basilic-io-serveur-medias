@@ -30,6 +30,10 @@ router.delete(
   controller.deleteMedia
 );
 
+// DELETE /api/medias/delete/:mediaPath
+// Supprime plusieurs médias sur le système de fichiers.
+router.delete("/deletemany", whitelistMiddleware, controller.deleteMedias);
+
 // GET /api/medias/public/get/:mediaFileName
 // Récupère un média et l'envoie.
 router.get("/public/get/:mediaFileName", controller.getPublicMedia);
