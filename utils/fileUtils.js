@@ -3,7 +3,6 @@
 */
 
 const fs = require("fs");
-const path = require("path");
 const root = process.env.MEDIA_ROOT + "/";
 
 const getCreationErrorString = (fileName, error) =>
@@ -47,7 +46,7 @@ exports.deleteFile = function (path) {
 
 exports.deleteFiles = function (...paths) {
   try {
-    for (path of paths) this.deleteFile(path);
+    for (el of paths) this.deleteFile(el);
   } catch (err) {
     console.log(err);
   }

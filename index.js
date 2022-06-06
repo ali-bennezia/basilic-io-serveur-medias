@@ -5,6 +5,9 @@ const dotenv = require("dotenv");
 const app = express();
 const configUtils = require("./utils/configUtils");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 dotenv.config();
 configUtils.checkEnvVariables();
 

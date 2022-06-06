@@ -23,12 +23,14 @@ exports.deleteMedia = async function (req, res) {
   }
 };
 
-// DELETE /api/medias/deletemany
+// POST /api/medias/deletemany
 exports.deleteMedias = async function (req, res) {
   try {
     if (
+      !"body" in req ||
+      !req.body ||
       !"list" in req.body ||
-      req.body.list ||
+      !req.body.list ||
       !Array.isArray(req.body.list) ||
       req.body.list.length == 0
     )
