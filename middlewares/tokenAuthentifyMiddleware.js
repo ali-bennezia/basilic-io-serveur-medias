@@ -4,7 +4,8 @@
 
 const authUtils = require("../utils/authUtils");
 
-/*Verification des droits d'accès au token.
+/*
+  Verification des droits d'accès au token.
   On demande au serveur d'application si le token envoyé en header a le droit d'avoir accès au média privé.
 */
 exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
@@ -17,8 +18,10 @@ exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
     )
       return res.status(401).json("Unauthorized");
 
-    let token = req.headers.authorization.replace("Bearer ", "");
+    if (!"mediaFileName" in req.params || !req.params.mediaFileName)
+      return res.status(400).json("Bad Request");
 
+    let token = req.headers.authorization.replace("Bearer ", "");
     await authUtils.authentifyToken(
       token,
       [req.params.mediaFileName],
@@ -32,6 +35,7 @@ exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
           tokenData.data.mediaAuthorizations &&
           Array.isArray(tokenData.data.mediaAuthorizations)
         ) {
+          console.log(tokenData.data.mediaAuthorizations);
           let authResults = tokenData.data.mediaAuthorizations.map(
             (el) => el.authorization
           );
@@ -44,8 +48,6 @@ exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
           !tokenData.data.authentic ||
           !fullAuthorization
         ) {
-          console.log(tokenData);
-          console.log(fullAuthorization);
           res.status(403).json("Forbidden");
         } else {
           next();
