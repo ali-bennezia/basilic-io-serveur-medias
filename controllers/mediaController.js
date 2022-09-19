@@ -47,14 +47,36 @@ exports.deleteMedias = async function (req, res) {
 // GET /api/medias/public/get/:mediaFileName
 exports.getPublicMedia = async function (req, res) {
   try {
-    if (!"mediaFileName" in req.params)
+    if (!("mediaFileName" in req.params))
       return res.status(400).json("Bad Request");
-    const fileData = fileUtils.readPublicFile(req.params.mediaFileName);
-    if (!fileData) return res.status(404).json("Not Found");
-    res.status(200).end(fileData, "binary");
+
+    if ("range" in req.headers) {
+      const rangeStrData = fileUtils.parseRangeString(req.headers.range);
+      const rangeData = fileUtils.readPublicFileRangeData(
+        req.params.mediaFileName,
+        req.headers.range
+      );
+
+      const fileData = await fileUtils.readPublicFile(
+        req.params.mediaFileName,
+        req.headers.range
+      );
+
+      if (!fileData) return res.status(404).json("Not Found");
+
+      res.set("Content-Range", rangeData.rangeHeader);
+      res.set("Content-Length", rangeData.lengthHeader);
+
+      return res.status(206).end(fileData, "binary");
+    } else {
+      const fileData = await fileUtils.readPublicFile(req.params.mediaFileName);
+      if (!fileData) return res.status(404).json("Not Found");
+
+      return res.status(200).end(fileData, "binary");
+    }
   } catch (err) {
-    res.status(500).json("Internal Server Error");
     console.log(err);
+    return res.status(500).json("Internal Server Error");
   }
 };
 
@@ -66,9 +88,29 @@ exports.getPrivateMedia = async function (req, res) {
       !req.params.mediaFileName.startsWith("private/")
     )
       return res.status(400).json("Bad Request");
-    const fileData = fileUtils.readFile(req.params.mediaFileName);
-    if (!fileData) return res.status(404).json("Not Found");
-    res.status(200).end(fileData, "binary");
+    if ("range" in req.headers) {
+      const rangeStrData = fileUtils.parseRangeString(req.headers.range);
+      const rangeData = fileUtils.readPublicFileRangeData(
+        req.params.mediaFileName,
+        req.headers.range
+      );
+
+      const fileData = await fileUtils.readPublicFile(
+        req.params.mediaFileName,
+        req.headers.range
+      );
+
+      if (!fileData) return res.status(404).json("Not Found");
+
+      res.set("Content-Range", rangeData.rangeHeader);
+      res.set("Content-Length", rangeData.lengthHeader);
+
+      return res.status(206).end(fileData, "binary");
+    } else {
+      const fileData = await fileUtils.readFile(req.params.mediaFileName);
+      if (!fileData) return res.status(404).json("Not Found");
+      res.status(200).end(fileData, "binary");
+    }
   } catch (err) {
     res.status(500).json("Internal Server Error");
     console.log(err);

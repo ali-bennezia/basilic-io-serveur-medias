@@ -29,6 +29,11 @@ fileUtils.createDirectories("", "public", "private");
 //Routage.
 const mediaRouter = require("./routers/mediaRouter");
 
+app.use((req, res, next) => {
+  res.set("Accept-Ranges", "bytes");
+  next();
+});
+
 app.use("/api/medias", mediaRouter);
 
 //Execution.
