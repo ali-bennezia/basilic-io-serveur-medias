@@ -31,6 +31,9 @@ const mediaRouter = require("./routers/mediaRouter");
 
 app.use((req, res, next) => {
   res.set("Accept-Ranges", "bytes");
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Headers", "*");
+
   next();
 });
 
