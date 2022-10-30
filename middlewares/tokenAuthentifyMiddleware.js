@@ -6,7 +6,7 @@ const authUtils = require("../utils/authUtils");
 
 /*
   Verification des droits d'accès au token.
-  On demande au serveur d'application si le token envoyé en header a le droit d'avoir accès au média privé.
+  On demande au serveur d'application si le token envoyé en header a le droit d'avoir accès au média privé dans le paramètre req.params.mediaFileName.
 */
 exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
   try {
@@ -22,11 +22,14 @@ exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
       return res.status(400).json("Bad Request");
 
     let token = req.headers.authorization.replace("Bearer ", "");
+    //Envoi d'une demande d'authentification des droits d'accès au média req.params.mediaFileName au serveur d'application, avec le token reçu.
     await authUtils.authentifyToken(
       token,
       [req.params.mediaFileName],
       (tokenData) => {
         let fullAuthorization = false;
+
+        //Dès reception d'informations du token, on vérifie la conformité des données et les droits d'accès reçus du serveur d'application.
         if (
           tokenData &&
           "data" in tokenData &&
@@ -35,13 +38,13 @@ exports.checkTokenPrivateMediaAccess = async function (req, res, next) {
           tokenData.data.mediaAuthorizations &&
           Array.isArray(tokenData.data.mediaAuthorizations)
         ) {
-          console.log(tokenData.data.mediaAuthorizations);
           let authResults = tokenData.data.mediaAuthorizations.map(
             (el) => el.authorization
           );
           fullAuthorization = !authResults.includes(false);
         }
 
+        //Si une donnée manque, ou si les droits d'accès ne sont pas complets, on refuse la requête en 403 Forbidden.
         if (
           !tokenData ||
           !tokenData.data ||

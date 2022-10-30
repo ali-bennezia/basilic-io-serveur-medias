@@ -2,6 +2,8 @@ const compulsoryEnvVariables = [
   "APPLICATION_SERVER_IPv6",
   "APPLICATION_SERVER_ADRESS",
   "MEDIA_ROOT",
+  "HTTPS_PRIVATE_KEY_FILE",
+  "HTTPS_CERTIFICATE_FILE",
 ];
 
 exports.checkEnvVariables = () => {

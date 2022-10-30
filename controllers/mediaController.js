@@ -50,6 +50,7 @@ exports.getPublicMedia = async function (req, res) {
     if (!("mediaFileName" in req.params))
       return res.status(400).json("Bad Request");
 
+    //Gestion de requêtes partielles.
     if ("range" in req.headers) {
       const rangeStrData = fileUtils.parseRangeString(req.headers.range);
       const rangeData = fileUtils.readPublicFileRangeData(
@@ -68,7 +69,8 @@ exports.getPublicMedia = async function (req, res) {
       res.set("Content-Length", rangeData.lengthHeader);
 
       return res.status(206).end(fileData, "binary");
-    } else {
+    } //Requêtes completes.
+    else {
       const fileData = await fileUtils.readPublicFile(req.params.mediaFileName);
       if (!fileData) return res.status(404).json("Not Found");
 

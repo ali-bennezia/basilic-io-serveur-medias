@@ -1,6 +1,8 @@
 //Configuration initiale.
 
 const express = require("express");
+const fs = require("fs");
+const https = require("https");
 const dotenv = require("dotenv");
 const app = express();
 const configUtils = require("./utils/configUtils");
@@ -12,6 +14,8 @@ dotenv.config();
 configUtils.checkEnvVariables();
 
 const port = parseInt(process.env.DEFAULT_PORT ?? 5001);
+const sport = parseInt(process.env.DEFAULT_SECURE_PORT ?? 5444);
+
 const enableWhitelist = process.env.ENABLE_WHITELIST == "true";
 
 console.log(`Configuration chargée.
@@ -39,7 +43,19 @@ app.use((req, res, next) => {
 
 app.use("/api/medias", mediaRouter);
 
-//Execution.
+//Execution écoute non sécurisée.
 app.listen(port, () => {
   console.log(`Serveur de média lancé et à l'écoute sur le port ${port}.`);
 });
+
+//Execution écoute sécurisée.
+https
+  .createServer({
+    key: process.env.HTTPS_PRIVATE_KEY_FILE,
+    cert: process.env.HTTPS_CERTIFICATE_FILE,
+  })
+  .listen(sport, () => {
+    console.log(
+      `(HTTPS) Serveur de média lancé et à l'écoute sur le port ${sport}.`
+    );
+  });
