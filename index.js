@@ -52,7 +52,8 @@ app.listen(port, () => {
 https
   .createServer({
     key: process.env.HTTPS_PRIVATE_KEY_FILE,
-    cert: process.env.HTTPS_CERTIFICATE_FILE,
+    cert: process.env.HTTPS_FULLCHAIN_FILE,
+    ca: process.env.HTTPS_CHAIN_FILE,
   })
   .listen(sport, () => {
     console.log(
