@@ -51,9 +51,9 @@ app.listen(port, () => {
 //Execution écoute sécurisée.
 https
   .createServer({
-    key: process.env.HTTPS_PRIVATE_KEY_FILE,
-    cert: process.env.HTTPS_FULLCHAIN_FILE,
-    ca: process.env.HTTPS_CHAIN_FILE,
+    key: fs.readFileSync(process.env.HTTPS_PRIVATE_KEY_FILE),
+    cert: fs.readFileSync(process.env.HTTPS_FULLCHAIN_FILE),
+    ca: fs.readFileSync(process.env.HTTPS_CHAIN_FILE),
   })
   .listen(sport, () => {
     console.log(
