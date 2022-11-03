@@ -54,7 +54,7 @@ https
     key: fs.readFileSync(process.env.HTTPS_PRIVATE_KEY_FILE),
     cert: fs.readFileSync(process.env.HTTPS_FULLCHAIN_FILE),
     ca: fs.readFileSync(process.env.HTTPS_CHAIN_FILE),
-  })
+  }, app)
   .listen(sport, () => {
     console.log(
       `(HTTPS) Serveur de média lancé et à l'écoute sur le port ${sport}.`
